@@ -1,9 +1,6 @@
 const mongoose = require('../mongoose/ mongoose');
 
 const tourScheme = mongoose.Schema({
-  primaryID: {
-    type: mongoose.Schema.ObjectId,
-  },
   id: {
     type: 'Number',
   },
@@ -40,6 +37,10 @@ const tourScheme = mongoose.Schema({
   longDescription: {
     type: 'String',
   },
+});
+
+tourScheme.pre('save', async () => {
+  console.log('pre save');
 });
 
 const tourModel = mongoose.model('Tours', tourScheme);

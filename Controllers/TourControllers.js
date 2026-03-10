@@ -6,6 +6,7 @@ const tours = JSON.parse(fs.readFileSync(`./dev-data/data/tours-simple.json`));
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestedTime,
     result: tours.length,
     data: tours,
   });
@@ -13,7 +14,7 @@ exports.getAllTours = (req, res) => {
 
 //TourByID>>>>>>>>>>>>>
 exports.getToursID = (req, res) => {
-  const result = tours.find((e) => e.id === req.params.id);
+  const result = tours.find((e) => String(e.id) === req.params.id);
   if (result) {
     res.status(200).json({
       status: 'success',
