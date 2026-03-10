@@ -3,7 +3,7 @@ exports.getAllUsers = (req, res) => {
   res.status(404).json({
     status: 'fail',
     requestedAt: req.requestedTime,
-    data: 'not defined',
+    data: 'Route not defined',
   });
 };
 
@@ -12,7 +12,7 @@ exports.getUserID = (req, res) => {
   res.status(404).json({
     status: 'fail',
     requestedAt: req.requestedTime,
-    data: 'not defined',
+    data: 'Route not defined',
   });
 };
 
@@ -21,7 +21,7 @@ exports.UpdateUser = (req, res) => {
   res.status(404).json({
     status: 'fail',
     requestedAt: req.requestedTime,
-    data: 'not defined',
+    data: 'Route not defined',
   });
 };
 
@@ -30,7 +30,7 @@ exports.PostUser = (req, res) => {
   res.status(404).json({
     status: 'fail',
     requestedAt: req.requestedTime,
-    data: 'not defined',
+    data: 'Route not defined',
   });
 };
 
@@ -39,6 +39,6 @@ exports.UserPut = (req, res) => {
   res.status(404).json({
     status: 'fail',
     requestedAt: req.requestedTime,
-    data: 'not defined',
+    data: 'Route not defined',
   });
 };
