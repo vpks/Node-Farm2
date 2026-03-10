@@ -39,9 +39,7 @@ const tourScheme = mongoose.Schema({
   },
 });
 
-tourScheme.pre('save', async () => {
-  console.log('pre save');
-});
+tourScheme.pre('save', async () => {});
 
 const tourModel = mongoose.model('Tours', tourScheme);
 
