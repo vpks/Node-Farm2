@@ -9,11 +9,11 @@ const TourController = require('../Controllers/TourControllers');
 // });
 
 router
-  .route('/tours')
+  .route('/')
   .get(testFunction, TourController.getAllTours)
   .post(TourController.PostTour);
 router
-  .route('/tours/:id')
+  .route('/:id')
   .get(TourController.getToursID)
   .patch(TourController.UpdateTour)
   .put(TourController.TourPut);

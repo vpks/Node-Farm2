@@ -17,8 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/v1', TourRouter);
-app.use('/api/v1', userRouter);
+app.use('/api/v1/tours', TourRouter);
+app.use('/api/v1/users', userRouter);
 
 // const PORT = 3000;
 // app.listen(PORT, () => {

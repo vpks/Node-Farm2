@@ -1,5 +1,4 @@
 const express = require('express');
-const testFunction = require('../Middleware/Middleware');
 
 const router = express.Router();
 const userController = require('../Controllers/userControllers');
@@ -8,12 +7,9 @@ const userController = require('../Controllers/userControllers');
 //   next();
 // });
 
+router.route('/').get(userController.getAllUsers).post(userController.PostUser);
 router
-  .route('/users')
-  .get(testFunction, userController.getAllUsers)
-  .post(userController.PostUser);
-router
-  .route('/users/:id')
+  .route('/:id')
   .get(userController.getUserID)
   .patch(userController.UpdateUser)
   .put(userController.UserPut);
