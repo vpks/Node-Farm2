@@ -7,6 +7,9 @@ const TourController = require('../Controllers/TourControllers');
 // router.param('id', (req, res, next, id) => {
 //   next();
 // });
+router
+  .route('/top-5-tours')
+  .get(TourController.Toptour, TourController.getAllTours);
 
 router
   .route('/')
@@ -16,5 +19,6 @@ router
   .route('/:id')
   .get(TourController.getToursID)
   .patch(TourController.UpdateTour)
-  .put(TourController.TourPut);
+  .put(TourController.TourPut)
+  .delete(TourController.DeleteTour);
 module.exports = router;

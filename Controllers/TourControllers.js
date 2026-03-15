@@ -1,32 +1,42 @@
 const fs = require('fs');
+
+const APIfeatures = require(`../APIFeatures/APIfeatures`);
 const tourModel = require('../models/TourModel');
 const catchAsyncErrors = require('../HelperFunctions/funtioncHelper');
 
 const tours = JSON.parse(fs.readFileSync(`./dev-data/data/tours-simple.json`));
 
-//getalltours====>>>>>>>
 exports.getAllTours = catchAsyncErrors(async (req, res, next) => {
-  const getTours = await tourModel.find();
+  const features = new APIfeatures(tourModel.find(), req.query)
+    .filter()
+    .limit()
+    .pagination()
+    .sort();
+
+  //data assign
+  const getTours = await features.query;
+
   res.status(200).json({
     status: 'success',
+    result: getTours.length,
     data: getTours,
   });
 });
 
-// res.status(200).json({
-//   status: 'success',
-//   requestedAt: req.requestedTime,
-//   result: tours.length,
-//   data: tours,
-// });
-
 //TourByID>>>>>>>>>>>>>
 exports.getToursID = catchAsyncErrors(async (req, res, next) => {
   const result = await tourModel.findById(req.params.id);
-  res.status(200).json({
-    status: 'success',
-    data: result,
-  });
+  if (result) {
+    res.status(200).json({
+      status: 'success',
+      data: result,
+    });
+  } else {
+    res.status(404).json({
+      status: 'fail',
+      data: 'no records found.',
+    });
+  }
 });
 
 //TourUpdatePatch
@@ -47,32 +57,6 @@ exports.PostTour = catchAsyncErrors(async (req, res, next) => {
     data: newTour,
   });
 });
-// const newID = tours[tours.length - 1].id + 1;
-// const newObj = {
-//   id: newID,
-//   // eslint-disable-next-line node/no-unsupported-features/es-syntax
-//   ...req.body,
-// };
-// tours.push(newObj);
-// fs.writeFile(
-//   './dev-data/data/tours-simple.json',
-//   JSON.stringify(tours),
-//   (err) => {
-//     if (err) {
-//       res.status(400).json({
-//         status: 'fail',
-//         message: err,
-//       });
-//     } else {
-//       res.status(200).json({
-//         status: 'success',
-//         newObj,
-//         message: 'created record',
-//       });
-//     }
-//   },
-// );
-
 //TourUpdatePut
 exports.TourPut = (req, res) => {
   const TourUpdate = req.body;
@@ -97,4 +81,23 @@ exports.TourPut = (req, res) => {
       }
     },
   );
+};
+
+exports.DeleteTour = catchAsyncErrors(async (req, res, next) => {
+  await tourModel.findOneAndDelete({ _id: req.params.id });
+  res.status(200).json({
+    status: 'succes',
+    data: `data with id:${req.params.id} successfully.`,
+  });
+});
+
+//aliasing
+exports.Toptour = async (req, res, next) => {
+  req.query = {
+    ratingAverage: {
+      gte: 4.5,
+    },
+    limit: 5,
+  };
+  next();
 };

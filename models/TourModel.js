@@ -1,46 +1,60 @@
 const mongoose = require('../mongoose/ mongoose');
 
-const tourScheme = mongoose.Schema({
-  name: { type: String, required: true },
-});
 // const tourScheme = mongoose.Schema({
-//   id: {
-//     type: 'Number',
-//   },
-//   name: {
-//     type: 'String',
-//   },
-//   startLocation: {
-//     type: 'String',
-//   },
-//   nextStartDate: {
-//     type: 'String',
-//   },
-//   duration: {
-//     type: 'Number',
-//   },
-//   maxGroupSize: {
-//     type: 'Number',
-//   },
-//   difficulty: {
-//     type: 'String',
-//   },
-//   avgRating: {
-//     type: 'Number',
-//   },
-//   numReviews: {
-//     type: 'Number',
-//   },
-//   regPrice: {
-//     type: 'Number',
-//   },
-//   shortDescription: {
-//     type: 'String',
-//   },
-//   longDescription: {
-//     type: 'String',
-//   },
+//   name: { type: String, required: true },
 // });
+const tourScheme = mongoose.Schema({
+  name: {
+    type: 'String',
+    required: [true, 'A tour must have a name'],
+    unique: true,
+  },
+  duration: {
+    type: 'Number',
+    required: [true, 'A tour must have a duration'],
+  },
+  maxGroupSize: {
+    type: 'Number',
+    required: [true, 'A tour must have a maxGroupSize'],
+  },
+  difficulty: {
+    type: 'String',
+    required: [true, 'A tour must have a difficulty'],
+  },
+  ratingAverage: {
+    type: 'Number',
+    default: 4.5,
+  },
+  ratingsQuantity: {
+    type: 'Number',
+    default: 0,
+  },
+  price: {
+    type: 'Number',
+    required: [true, 'A tour must have a price'],
+  },
+  priceDiscount: Number,
+  summary: {
+    type: 'String',
+    trim: true,
+    required: [true, 'A tour must have a summary'],
+  },
+  description: {
+    type: 'String',
+    trim: true,
+    required: [true, 'A tour must have a summary'],
+  },
+  imageCover: {
+    type: 'String',
+    required: [true, 'A tour must have a images'],
+  },
+  images: [String],
+  createdAt: {
+    type: 'Date',
+    default: Date.now(),
+  },
+  startDates: [Date],
+});
 
 tourScheme.pre('save', async () => {});
 
