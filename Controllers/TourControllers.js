@@ -101,3 +101,105 @@ exports.Toptour = async (req, res, next) => {
   };
   next();
 };
+
+exports.TourStats = async (req, res, next) => {};
+
+exports.getTourStats = catchAsyncErrors(async (req, res, next) => {
+  const stats = await tourModel.aggregate([
+    { $match: { ratingAverage: { $gte: 4.5 } } },
+    {
+      $group: {
+        _id: { $toUpper: '$difficulty' },
+        numTours: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' },
+      },
+    },
+    {
+      $sort: { avgPrice: 1 },
+    },
+    // {
+    //   $match: { _id: { $ne: 'EASY' } },
+    // },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    result: stats.length,
+    data: stats,
+  });
+});
+
+//get full month name
+function getFullMonthName(monthNumber) {
+  // Month numbers in JavaScript's Date object are 0-indexed (0-11).
+  // We subtract 1 from the input number to match this (e.g., 1 becomes 0 for January).
+  const date = new Date(2000, monthNumber - 1, 1);
+
+  // Use toLocaleString to format the date part to the full month name.
+  // 'en-US' is an example locale; you can change this as needed.
+  const monthName = date.toLocaleString('en-US', { month: 'long' });
+
+  return monthName;
+}
+
+exports.getMonthlyPlan = catchAsyncErrors(async (req, res, next) => {
+  const year = req.params.year * 1;
+  const plan = await tourModel.aggregate([
+    {
+      $unwind: '$startDates',
+    },
+    {
+      $match: {
+        startDates: {
+          $gte: new Date(`${year}-01-01`),
+          $lte: new Date(`${year}-12-31`),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $month: '$startDates',
+        },
+        numTours: { $sum: 1 },
+        tours: { $push: '$name' },
+      },
+    },
+    {
+      $addFields: {
+        month: '$_id',
+        // month: {
+        //   $function: {
+        //     body: getFullMonthName,
+        //     args: ['$_id'],
+        //   },
+        // },
+      },
+    },
+    {
+      $project: { _id: 0 },
+    },
+    {
+      $sort: { month: 1 },
+    },
+  ]);
+
+  // plan = plan.map((e) => {
+  //   e.month = getFullMonthName(e.month);
+  //   return e;
+  // });
+  const planNew = plan.map((e) => {
+    e.month = getFullMonthName(e.month);
+    return e;
+  });
+  // console.log(planNew);
+
+  res.status(200).json({
+    status: 'success',
+    result: planNew.length,
+    data: planNew,
+  });
+});

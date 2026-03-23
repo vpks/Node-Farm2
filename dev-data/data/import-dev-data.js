@@ -10,6 +10,7 @@ const dataImport = async () => {
     await tourModel.create(data);
     process.exit();
   } catch (err) {
+    console.log(err);
     process.exit();
   }
 };

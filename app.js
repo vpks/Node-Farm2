@@ -1,4 +1,5 @@
 const express = require('express');
+
 const morgan = require('morgan');
 const TourRouter = require('./routers/TourRouter');
 const userRouter = require('./routers/userRouter');
@@ -31,6 +32,13 @@ app.use((err, req, res, next) => {
     status: 'fail',
     message: newError.message,
     stack: newError.stack,
+  });
+});
+
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `the route for ${req.originalUrl} not found`,
   });
 });
 
